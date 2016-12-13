@@ -161,7 +161,7 @@ public class Robot extends IterativeRobot {
     		if(gyro.getAngle()<=-360) {
     			gyro.reset();
     		}
-    		
+    		//
     		SmartDashboard.putNumber("Rate", jerrie.getRate());
     		SmartDashboard.putNumber("Distance", jerrie.getDistance());
     		SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
