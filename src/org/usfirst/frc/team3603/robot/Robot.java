@@ -5,7 +5,6 @@
  *
  ****************************************/
 
-//
 package org.usfirst.frc.team3603.robot;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
