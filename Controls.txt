@@ -1,0 +1,12 @@
+cONTROLS- SET TO USE TWO BIG JOYSTICKS
+
+LEFT JOYSTICK
+
+Controller input	|	Robot output
+Forwards/backwards	|	Forwards/backwards
+
+
+RIGHT JOYSTICK
+
+Controller input	|	Robot output
+Left/right		|	Turn left/turn right
