@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	
-	Joystick xbox1 = new Joystick(0);
-	Joystick xbox2 = new Joystick(1);
+	Joystick xbox1 = new Joystick(2);
+	Joystick xbox2 = new Joystick(3);
 	Victor left1 = new Victor(1);
 	Victor right1 = new Victor(2);
 	Victor left2 = new Victor(3);
@@ -74,11 +74,11 @@ public class Robot extends IterativeRobot {
 	    		*** DRIVER CONTROLS ***
 	    		**********************/
 	    		double mag1 = -Math.pow(xbox1.getRawAxis(1), 3);
-	    		double mag2 = -Math.pow(xbox1.getRawAxis(5), 3);
+	    		double mag2 = -Math.pow(xbox2.getRawAxis(1), 3);
 	    		//
-	    		if(Math.abs(mag1)>=0.1 || Math.abs(mag2)>=0.1) {
-	    			mainDrive.tankDrive(mag1, mag2);
-	    		}
+	    		//if(Math.abs(mag1)>=0.1 || Math.abs(mag2)>=0.1) {
+	    		//	mainDrive.tankDrive(mag1, mag2);
+	    		//}
 	    		
 	    		while(xbox1.getRawButton(1)) {
 	    			mainDrive.tankDrive(-0.75, -0.75);
@@ -128,19 +128,20 @@ public class Robot extends IterativeRobot {
 	    		while(xbox1.getRawButton(4)) {
 	    			mainDrive.tankDrive(0.75, 0.75);
 	    		}
+	    		/*
 	    		while(xbox1.getRawAxis(2)>=0.2) {
 	    			mainDrive.tankDrive(-xbox1.getRawAxis(2), xbox1.getRawAxis(2));
 	    		}
 	    		while(xbox1.getRawAxis(3)>=0.2) {
 	    			mainDrive.tankDrive(xbox1.getRawAxis(3), -xbox1.getRawAxis(3));
 	    		}
-	    		
+	    		*/
 	    		/****************************
 	    		 *** MANIPULATOR CONTROLS *** Reserved for testing at the moment
 	    		 ****************************/
-	    		double x = -Math.pow(xbox2.getRawAxis(0), 3);
-	    		double y = -Math.pow(xbox2.getRawAxis(1), 3);
-	    		double rot = -Math.pow(xbox2.getRawAxis(4), 3);
+	    		double x = -Math.pow(xbox1.getRawAxis(0), 3);
+	    		double y = -Math.pow(xbox1.getRawAxis(1), 3);
+	    		double rot = -Math.pow(xbox2.getRawAxis(0), 3);
 	    		
 	    		if(Math.abs(x)>=0.1 || Math.abs(y)>=0.1 || Math.abs(rot)>=0.1) {
 	    			mainDrive.mecanumDrive_Cartesian(x, rot, y, gyro.getAngle());
