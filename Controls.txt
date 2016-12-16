@@ -1,4 +1,5 @@
-cONTROLS- SET TO USE TWO BIG JOYSTICKS
+CONTROLS- SET TO USE TWO BIG JOYSTICKS
+With no controller input, robot will brake
 
 LEFT JOYSTICK
 
@@ -9,4 +10,4 @@ Forwards/backwards	|	Forwards/backwards
 RIGHT JOYSTICK
 
 Controller input	|	Robot output
-Left/right		|	Turn left/turn right
+Left/right		    |	Turn left/turn right

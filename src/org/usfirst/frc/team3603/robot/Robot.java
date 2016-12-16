@@ -8,9 +8,6 @@
 package org.usfirst.frc.team3603.robot;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
@@ -46,7 +43,6 @@ public class Robot extends IterativeRobot {
     	jerrie.setMinRate(10);
     	jerrie.setDistancePerPulse(0.25);
     	jerrie.setSamplesToAverage(7);
-    	
     }
     
 	public void autonomousInit() {
@@ -60,10 +56,11 @@ public class Robot extends IterativeRobot {
     	while (isOperatorControl() && isEnabled()) {
 	    	if(joy1.getRawButton(1) || joy1.getRawButton(2) || joy1.getRawButton(3) || joy1.getRawButton(4) || joy1.getRawButton(5) || joy1.getRawButton(6) || joy1.getRawButton(7) || joy1.getRawButton(8) || joy1.getRawButton(9) || joy1.getRawButton(10) || 
 	    			joy2.getRawButton(1) || joy2.getRawButton(2) || joy2.getRawButton(3) || joy2.getRawButton(4) || joy2.getRawButton(5) || joy2.getRawButton(6) || joy2.getRawButton(7) || joy2.getRawButton(8) || joy2.getRawButton(9) || joy2.getRawButton(10) ||
-	    			joy1.getRawAxis(1) >= 0.05 || joy1.getRawAxis(2) >= 0.05 || joy1.getRawAxis(3) >= 0.05 || joy1.getRawAxis(4) >= 0.05 || joy1.getRawAxis(5) >= 0.05 || joy1.getRawAxis(6) >= 0.05 ||
-	    			joy2.getRawAxis(1) >= 0.05 || joy2.getRawAxis(2) >= 0.05 || joy2.getRawAxis(3) >= 0.05 || joy2.getRawAxis(4) >= 0.05 || joy2.getRawAxis(5) >= 0.05 || joy2.getRawAxis(6) >= 0.05 ||
-	    			joy1.getRawAxis(1) <= -0.05 || joy1.getRawAxis(2) <= -0.05 || joy1.getRawAxis(3) <= -0.05 || joy1.getRawAxis(4) <= -0.05 || joy1.getRawAxis(5) <= -0.05 || joy1.getRawAxis(6) <= -0.05 ||
-	    			joy2.getRawAxis(1) <= -0.05 || joy2.getRawAxis(2) <= -0.05 || joy2.getRawAxis(3) <= -0.05 || joy2.getRawAxis(4) <= -0.05 || joy2.getRawAxis(5) <= -0.05 || joy2.getRawAxis(6) <= -0.05) {
+	    			joy1.getRawAxis(0) >= 0.05 || joy1.getRawAxis(1) >= 0.05 || joy1.getRawAxis(2) >= 0.05 || joy1.getRawAxis(3) >= 0.05 || joy1.getRawAxis(4) >= 0.05 || joy1.getRawAxis(5) >= 0.05 || joy1.getRawAxis(6) >= 0.05 ||
+	    			joy2.getRawAxis(0) >= 0.05 || joy2.getRawAxis(1) >= 0.05 || joy2.getRawAxis(2) >= 0.05 || joy2.getRawAxis(3) >= 0.05 || joy2.getRawAxis(4) >= 0.05 || joy2.getRawAxis(5) >= 0.05 || joy2.getRawAxis(6) >= 0.05 ||
+	    			joy1.getRawAxis(0) <= -0.05 || joy1.getRawAxis(1) <= -0.05 || joy1.getRawAxis(2) <= -0.05 || joy1.getRawAxis(3) <= -0.05 || joy1.getRawAxis(4) <= -0.05 || joy1.getRawAxis(5) <= -0.05 || joy1.getRawAxis(6) <= -0.05 ||
+	    			joy2.getRawAxis(0) <= -0.05 || joy2.getRawAxis(1) <= -0.05 || joy2.getRawAxis(2) <= -0.05 || joy2.getRawAxis(3) <= -0.05 || joy2.getRawAxis(4) <= -0.05 || joy2.getRawAxis(5) <= -0.05 || joy2.getRawAxis(6) <= -0.05) {
+	    		
 	    		/**********************
 	    		*** DRIVER CONTROLS ***
 	    		**********************/
@@ -75,37 +72,30 @@ public class Robot extends IterativeRobot {
 	    		if(Math.abs(x)>=0.1 || Math.abs(y)>=0.1 || Math.abs(rot)>=0.1) {
 	    			mainDrive.mecanumDrive_Cartesian(x, rot, y, gyro.getAngle());
 	    		}
-	    		
-	    		if(gyro.getAngle()>=360) {
-	    			gyro.reset();
-	    		}
-	    		if(gyro.getAngle()<=-360) {
-	    			gyro.reset();
-	    		}
-	    		
-	    		SmartDashboard.putNumber("Rate", jerrie.getRate());
-	    		SmartDashboard.putNumber("Distance", jerrie.getDistance());
-	    		SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
-	    		SmartDashboard.putNumber("Time", timer.get());
     	
 	    	} else {
-	    		if(gyro.getAngle()>=360) {
-	    			gyro.reset();
-	    		}
-	    		if(gyro.getAngle()<=-360) {
-	    			gyro.reset();
-	    		}
-	    		
-	    		SmartDashboard.putNumber("Rate", jerrie.getRate());
-	    		SmartDashboard.putNumber("Distance", jerrie.getDistance());
-	    		SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
-	    		SmartDashboard.putNumber("Time", timer.get());
-	    		
 	    		left1.set(0);
 	    		left2.set(0);
 	    		right1.set(0);
 	    		right2.set(0);
 	    	}
+	    	try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {//This is to protect from over sampling
+				e.printStackTrace();
+			}
+
+    		if(gyro.getAngle()>=360) {
+    			gyro.reset();
+    		}
+    		if(gyro.getAngle()<=-360) {
+    			gyro.reset();
+    		}
+    		
+    		SmartDashboard.putNumber("Rate", jerrie.getRate());
+    		SmartDashboard.putNumber("Distance", jerrie.getDistance());
+    		SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
+    		SmartDashboard.putNumber("Time", timer.get());
     	}
     }
     public void testPeriodic() {
