@@ -20,14 +20,15 @@ public class Robot extends IterativeRobot {
 	
 	Joystick joy1 = new Joystick(2);
 	Joystick joy2 = new Joystick(3);
-	
-	Victor left1 = new Victor(1);
-	Victor right1 = new Victor(2);
-	Victor left2 = new Victor(3);
-	Victor right2 = new Victor(4);
-	
+
 	AnalogGyro gyro = new AnalogGyro(0);
-	RobotDrive mainDrive = new RobotDrive(left2, left1, right2, right1); 
+	
+	Victor backLeftMotor = new Victor(1);
+	Victor backRightMotor = new Victor(2);
+	Victor frontLeftMotor = new Victor(3);
+	Victor frontRightMotor = new Victor(4);
+	
+	RobotDrive mainDrive = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor); 
 	                             //(frontLeft, rearLeft, frontRight rearRight);
 	
 	Encoder jerrie = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
@@ -76,10 +77,10 @@ public class Robot extends IterativeRobot {
 	    		}
     	
 	    	} else {
-	    		left1.set(0);
-	    		left2.set(0);
-	    		right1.set(0);
-	    		right2.set(0);
+	    		backLeftMotor.set(0);
+	    		frontLeftMotor.set(0);
+	    		backRightMotor.set(0);
+	    		frontRightMotor.set(0);
 	    	}
 	    	
 	    	try {
