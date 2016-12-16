@@ -28,14 +28,16 @@ public class Robot extends IterativeRobot {
 	
 	AnalogGyro gyro = new AnalogGyro(0);
 	RobotDrive mainDrive = new RobotDrive(left2, left1, right2, right1); 
-	                             //(frontLeft, rearLeft, frontRight rearRight)
+	                             //(frontLeft, rearLeft, frontRight rearRight);
 	
-	Encoder jerrie = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+	Encoder jerrie = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
+								//(Pin1, Pin2, invert read, EncodingType);
 	Timer timer = new Timer();
 	
     public void robotInit() {
+    	gyro.initGyro();
+    	gyro.calibrate();
     	gyro.reset();
-    	gyro.setSensitivity(0.5);
     	jerrie.reset();
     	timer.start();
     	
@@ -79,6 +81,7 @@ public class Robot extends IterativeRobot {
 	    		right1.set(0);
 	    		right2.set(0);
 	    	}
+	    	
 	    	try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {//This is to protect from over sampling
