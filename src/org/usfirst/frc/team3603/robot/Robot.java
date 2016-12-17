@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team3603.robot;
 
+import edu.wpi.first.wpilibj.ADXL362;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -33,6 +34,9 @@ public class Robot extends IterativeRobot {
 	
 	Encoder jerrie = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
 								//(Pin1, Pin2, invert read, EncodingType);
+	
+	ADXL362 accel = new ADXL362(null, null);
+	
 	Timer timer = new Timer();
 	
     public void robotInit() {
@@ -43,7 +47,7 @@ public class Robot extends IterativeRobot {
     	timer.start();
     	
     	jerrie.setMaxPeriod(.1);
-    	jerrie.setMinRate(10);
+    	jerrie.setMinRate(1);
     	jerrie.setDistancePerPulse(0.25);
     	jerrie.setSamplesToAverage(7);
     }
@@ -95,7 +99,7 @@ public class Robot extends IterativeRobot {
     		if(gyro.getAngle()<=-360) {
     			gyro.reset();
     		}
-    		
+    		SmartDashboard.putNumber("X-Axis", accel.getX());
     		SmartDashboard.putNumber("Rate", jerrie.getRate());
     		SmartDashboard.putNumber("Distance", jerrie.getDistance());
     		SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
