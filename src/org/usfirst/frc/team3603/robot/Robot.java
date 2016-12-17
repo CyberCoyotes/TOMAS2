@@ -9,6 +9,7 @@ package org.usfirst.frc.team3603.robot;
 
 import edu.wpi.first.wpilibj.ADXL362;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
@@ -45,6 +46,8 @@ public class Robot extends IterativeRobot {
 	Timer timer = new Timer();
 	
     public void robotInit() {
+    	CameraServer.getInstance().startAutomaticCapture();
+    	
     	gyro.initGyro();
     	gyro.calibrate();
     	gyro.reset();
@@ -77,6 +80,20 @@ public class Robot extends IterativeRobot {
 	    		
 	    		if(Math.abs(x)>=0.1 || Math.abs(y)>=0.1 || Math.abs(rot)>=0.1) {
 	    			mainDrive.mecanumDrive_Cartesian(x, rot, y, gyro.getAngle());
+	    		}
+	    		
+	    		//To test and see if code lines up with wiring
+	    		while(joy1.getRawButton(2)) {
+	    			backLeftMotor.set(0.75);
+	    		}
+	    		while(joy1.getRawButton(3)) {
+	    			backRightMotor.set(0.75);
+	    		}
+	    		while(joy1.getRawButton(4)) {
+	    			frontLeftMotor.set(0.75);
+	    		}
+	    		while(joy1.getRawButton(5)) {
+	    			frontRightMotor.set(0.75);
 	    		}
     	
 	    	} else {
