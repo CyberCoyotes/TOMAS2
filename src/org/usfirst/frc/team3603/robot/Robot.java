@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	
-	public static final SPI.Port ACCELEROMETER_PORT = SPI.Port.kOnboardCS0;
-	public static final Range ACCELEROMETER_RANGE = Range.k8G;
+	//public static final SPI.Port ACCELEROMETER_PORT = SPI.Port.kOnboardCS0;
+	//public static final Range ACCELEROMETER_RANGE = Range.k8G;
 	
 	Joystick joy1 = new Joystick(2);
 	Joystick joy2 = new Joystick(3);
@@ -41,13 +41,13 @@ public class Robot extends IterativeRobot {
 	Encoder enc = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
 								//(Pin1, Pin2, invert read, EncodingType);
 	
-	ADXL362 accel = new ADXL362(ACCELEROMETER_PORT, ACCELEROMETER_RANGE);
+	//ADXL362 accel = new ADXL362(ACCELEROMETER_PORT, ACCELEROMETER_RANGE);
 	
 	Timer timer = new Timer();
 	
     public void robotInit() {
-    	CameraServer.getInstance().startAutomaticCapture();
-    	
+    	backRightMotor.setInverted(true);
+    	frontRightMotor.setInverted(true);
     	gyro.initGyro();
     	gyro.calibrate();
     	gyro.reset();
@@ -69,17 +69,17 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	enc.reset();
     	while (isOperatorControl() && isEnabled()) {
-	    	if(joy1.isReading(joy1) || joy2.isReading(joy2)) {
+	    	if(joy1.getRawButton(1) || joy1.getRawButton(2) || joy1.getRawButton(3) || joy1.getRawButton(4) || joy1.getRawButton(5) || joy1.getRawButton(6) || joy1.getRawButton(7) || joy1.getRawButton(8) || joy1.getRawButton(9) || joy1.getRawButton(10) ||  joy2.getRawButton(1) || joy2.getRawButton(2) || joy2.getRawButton(3) || joy2.getRawButton(4) || joy2.getRawButton(5) || joy2.getRawButton(6) || joy2.getRawButton(7) || joy2.getRawButton(8) || joy2.getRawButton(9) || joy2.getRawButton(10) || joy1.getRawAxis(0) >= 0.05 || joy1.getRawAxis(1) >= 0.05 || joy1.getRawAxis(2) >= 0.05 || joy1.getRawAxis(3) >= 0.05 || joy1.getRawAxis(4) >= 0.05 || joy1.getRawAxis(5) >= 0.05 || joy1.getRawAxis(6) >= 0.05 || joy2.getRawAxis(0) >= 0.05 || joy2.getRawAxis(1) >= 0.05 || joy2.getRawAxis(2) >= 0.05 || joy2.getRawAxis(3) >= 0.05 || joy2.getRawAxis(4) >= 0.05 || joy2.getRawAxis(5) >= 0.05 || joy2.getRawAxis(6) >= 0.05 || joy1.getRawAxis(0) <= -0.05 || joy1.getRawAxis(1) <= -0.05 || joy1.getRawAxis(2) <= -0.05 || joy1.getRawAxis(3) <= -0.05 || joy1.getRawAxis(4) <= -0.05 || joy1.getRawAxis(5) <= -0.05 || joy1.getRawAxis(6) <= -0.05 || joy2.getRawAxis(0) <= -0.05 || joy2.getRawAxis(1) <= -0.05 || joy2.getRawAxis(2) <= -0.05 || joy2.getRawAxis(3) <= -0.05 || joy2.getRawAxis(4) <= -0.05 || joy2.getRawAxis(5) <= -0.05 || joy2.getRawAxis(6) <= -0.05) {
 	    		/**********************
 	    		*** DRIVER CONTROLS ***
 	    		**********************/
 	    		
-	    		double x = -Math.pow(joy1.getRawAxis(0), 3);
-	    		double y = -Math.pow(joy1.getRawAxis(1), 3);
-	    		double rot = -Math.pow(joy2.getRawAxis(0), 3);
+	    		double x = Math.pow(joy1.getRawAxis(0), 3);
+	    		double y = Math.pow(joy1.getRawAxis(1), 3);
+	    		double rot = Math.pow(joy2.getRawAxis(0), 3);
 	    		
 	    		if(Math.abs(x)>=0.1 || Math.abs(y)>=0.1 || Math.abs(rot)>=0.1) {
-	    			mainDrive.mecanumDrive_Cartesian(x, rot, y, gyro.getAngle());
+	    			mainDrive.mecanumDrive_Cartesian(x, y, rot, 0);
 	    		}
 	    		
 	    		//To test and see if code lines up with wiring
@@ -116,9 +116,9 @@ public class Robot extends IterativeRobot {
     		if(gyro.getAngle()<=-360) {
     			gyro.reset();
     		}
-    		SmartDashboard.putNumber("X-Axis", accel.getX());
-    		SmartDashboard.putNumber("Y-Axis", accel.getY());
-    		SmartDashboard.putNumber("Z-Axis", accel.getZ());
+    		//SmartDashboard.putNumber("X-Axis", accel.getX());
+    		//SmartDashboard.putNumber("Y-Axis", accel.getY());
+    		//SmartDashboard.putNumber("Z-Axis", accel.getZ());
     		SmartDashboard.putNumber("Rate", enc.getRate());
     		SmartDashboard.putNumber("Distance", enc.getDistance());
     		SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
