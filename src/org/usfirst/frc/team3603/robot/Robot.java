@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	
-	//public static final SPI.Port ACCELEROMETER_PORT = SPI.Port.kOnboardCS0;
-	//public static final Range ACCELEROMETER_RANGE = Range.k8G;
+	public static final SPI.Port ACCELEROMETER_PORT = SPI.Port.kOnboardCS0;
+	public static final Range ACCELEROMETER_RANGE = Range.k8G;
 	
 	Joystick joy1 = new Joystick(2);
 	Joystick joy2 = new Joystick(3);
@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot {
 	Encoder enc = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
 								//(Pin1, Pin2, invert read, EncodingType);
 	
-	//ADXL362 accel = new ADXL362(ACCELEROMETER_PORT, ACCELEROMETER_RANGE);
+	ADXL362 accel = new ADXL362(ACCELEROMETER_PORT, ACCELEROMETER_RANGE);
 	
 	Timer timer = new Timer();
 	
@@ -116,9 +116,9 @@ public class Robot extends IterativeRobot {
     		if(gyro.getAngle()<=-360) {
     			gyro.reset();
     		}
-    		//SmartDashboard.putNumber("X-Axis", accel.getX());
-    		//SmartDashboard.putNumber("Y-Axis", accel.getY());
-    		//SmartDashboard.putNumber("Z-Axis", accel.getZ());
+    		SmartDashboard.putNumber("X-Axis", accel.getX());
+    		SmartDashboard.putNumber("Y-Axis", accel.getY());
+    		SmartDashboard.putNumber("Z-Axis", accel.getZ());
     		SmartDashboard.putNumber("Rate", enc.getRate());
     		SmartDashboard.putNumber("Distance", enc.getDistance());
     		SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
