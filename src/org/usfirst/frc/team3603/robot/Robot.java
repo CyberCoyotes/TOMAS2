@@ -8,6 +8,7 @@
 package org.usfirst.frc.team3603.robot;
 
 import edu.wpi.first.wpilibj.ADXL362;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Encoder;
@@ -28,7 +29,7 @@ public class Robot extends IterativeRobot {
 	Joystick joy1 = new Joystick(2);
 	Joystick joy2 = new Joystick(3);
 
-	AnalogGyro gyro = new AnalogGyro(0);
+	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 	
 	Victor backLeftMotor = new Victor(1);
 	Victor backRightMotor = new Victor(2);
@@ -41,14 +42,13 @@ public class Robot extends IterativeRobot {
 	Encoder enc = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
 								//(Pin1, Pin2, invert read, EncodingType);
 	
-	ADXL362 accel = new ADXL362(ACCELEROMETER_PORT, ACCELEROMETER_RANGE);
+	ADXL362 accel = new ADXL362(ACCELEROMETER_RANGE);
 	
 	Timer timer = new Timer();
 	
     public void robotInit() {
     	backRightMotor.setInverted(true);
     	frontRightMotor.setInverted(true);
-    	gyro.initGyro();
     	gyro.calibrate();
     	gyro.reset();
     	enc.reset();
