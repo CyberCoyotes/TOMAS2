@@ -38,7 +38,6 @@ public class Robot extends IterativeRobot {
 	ADXL362 accel = new ADXL362(Range.k8G);
 	Timer timer = new Timer();
 	
-	@Override
     public void robotInit() {
     	backRightMotor.setInverted(true);
     	frontRightMotor.setInverted(true);
@@ -57,6 +56,27 @@ public class Robot extends IterativeRobot {
     }
 	
     public void autonomousPeriodic() {
+    	while(isAutonomous()) {
+    		timer.start();
+    		if(timer.get() <= 3 && enc.getDistance() <= 3) {
+    			mainDrive.mecanumDrive_Cartesian(0, 0.75, 0, gyro.getAngle()); //Drive forwards for 3 seconds or three feet
+    		}
+    		if(timer.get() <= 6 && enc.getDistance() <= 6) {
+    			mainDrive.mecanumDrive_Cartesian(0.75, 0, 0, gyro.getAngle()); //Drive right for 3 seconds or three feet
+    		}
+    		if(timer.get() <= 9 && enc.getDistance() <= 9) {
+    			mainDrive.mecanumDrive_Cartesian(0, -0.75, 0, gyro.getAngle());//Drive back for 3 seconds or three feet
+    		}
+    		if(timer.get() <= 12 && enc.getDistance() <= 12) {
+    			mainDrive.mecanumDrive_Cartesian(-0.75, 0, 0, gyro.getAngle());//Drive left for 3 seconds or three feet
+    		}
+    		if(timer.get() <= 15 && gyro.getAngle() < 90) {
+    			mainDrive.mecanumDrive_Cartesian(0.75, 0, 0.75, gyro.getAngle());//Make an arc for 3 seconds or 90 degrees
+    		}
+    		if(timer.get() <= 20) {
+    			mainDrive.mecanumDrive_Cartesian(0, 0, -1, gyro.getAngle());//Spin left really fast for 5 seconds
+    		}
+    	}
     }
 
     public void teleopPeriodic() {
@@ -74,7 +94,6 @@ public class Robot extends IterativeRobot {
 	    		if(Math.abs(x)>=0.1 || Math.abs(y)>=0.1 || Math.abs(rot)>=0.1) {
 	    			mainDrive.mecanumDrive_Cartesian(x, y, rot, 0);
 	    		}
-    	
 	    	} else {
 	    		//Brake if the controllers don't read anything
 	    		backLeftMotor.set(0);
@@ -84,7 +103,7 @@ public class Robot extends IterativeRobot {
 	    	}
 	    	
 	    	try {
-				Thread.sleep(10);
+				Thread.sleep(5);
 			} catch (InterruptedException e) {//This is to protect from over sampling
 				e.printStackTrace();
 			}
@@ -96,9 +115,9 @@ public class Robot extends IterativeRobot {
     			gyro.reset();
     		}
     		
-    		SmartDashboard.putNumber("X-Axis", accel.getX());
-    		SmartDashboard.putNumber("Y-Axis", accel.getY());
-    		SmartDashboard.putNumber("Z-Axis", accel.getZ());
+    		SmartDashboard.putNumber("X-Axis", accel.getX()*32.174049);
+    		SmartDashboard.putNumber("Y-Axis", accel.getY()*32.174049);
+    		SmartDashboard.putNumber("Z-Axis", accel.getZ()*32.174049); //Gs to feet/s^2
     		SmartDashboard.putNumber("Rate", enc.getRate());
     		SmartDashboard.putNumber("Distance", enc.getDistance());
     		SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
