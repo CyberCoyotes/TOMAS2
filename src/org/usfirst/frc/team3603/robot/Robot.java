@@ -13,21 +13,12 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
-	
-	public static final SPI.Port ACCELEROMETER_PORT = SPI.Port.kOnboardCS0;
-	public static final Range ACCELEROMETER_RANGE = Range.k8G;
-	
-	NetworkTable table = NetworkTable.getTable("GRIP/myContoursReport");
-	double[] defaultValue = new double[0];
-	
 	Joystick joy1 = new Joystick(2);
 	Joystick joy2 = new Joystick(3);
 
@@ -44,9 +35,10 @@ public class Robot extends IterativeRobot {
 	Encoder enc = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
 								//(Pin1, Pin2, invert read, EncodingType);
 	
-	ADXL362 accel = new ADXL362(ACCELEROMETER_RANGE);
+	ADXL362 accel = new ADXL362(Range.k8G);
 	Timer timer = new Timer();
 	
+	@Override
     public void robotInit() {
     	backRightMotor.setInverted(true);
     	frontRightMotor.setInverted(true);
@@ -103,9 +95,7 @@ public class Robot extends IterativeRobot {
     		if(gyro.getAngle()<=-360) {
     			gyro.reset();
     		}
-    		double[] centerX = table.getNumberArray("centerX", defaultValue);
     		
-    		SmartDashboard.putNumber("centerX", centerX[0]);
     		SmartDashboard.putNumber("X-Axis", accel.getX());
     		SmartDashboard.putNumber("Y-Axis", accel.getY());
     		SmartDashboard.putNumber("Z-Axis", accel.getZ());
