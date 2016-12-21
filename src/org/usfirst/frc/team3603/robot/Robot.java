@@ -9,8 +9,6 @@ package org.usfirst.frc.team3603.robot;
 
 import edu.wpi.first.wpilibj.ADXL362;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,12 +17,16 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	
 	public static final SPI.Port ACCELEROMETER_PORT = SPI.Port.kOnboardCS0;
 	public static final Range ACCELEROMETER_RANGE = Range.k8G;
+	
+	NetworkTable table = NetworkTable.getTable("GRIP/myContoursReport");
+	double[] defaultValue = new double[0];
 	
 	Joystick joy1 = new Joystick(2);
 	Joystick joy2 = new Joystick(3);
@@ -43,7 +45,6 @@ public class Robot extends IterativeRobot {
 								//(Pin1, Pin2, invert read, EncodingType);
 	
 	ADXL362 accel = new ADXL362(ACCELEROMETER_RANGE);
-	
 	Timer timer = new Timer();
 	
     public void robotInit() {
@@ -81,20 +82,6 @@ public class Robot extends IterativeRobot {
 	    		if(Math.abs(x)>=0.1 || Math.abs(y)>=0.1 || Math.abs(rot)>=0.1) {
 	    			mainDrive.mecanumDrive_Cartesian(x, y, rot, 0);
 	    		}
-	    		
-	    		//To test and see if code lines up with wiring
-	    		while(joy1.getRawButton(2)) {
-	    			backLeftMotor.set(0.75);
-	    		}
-	    		while(joy1.getRawButton(3)) {
-	    			backRightMotor.set(0.75);
-	    		}
-	    		while(joy1.getRawButton(4)) {
-	    			frontLeftMotor.set(0.75);
-	    		}
-	    		while(joy1.getRawButton(5)) {
-	    			frontRightMotor.set(0.75);
-	    		}
     	
 	    	} else {
 	    		//Brake if the controllers don't read anything
@@ -116,6 +103,9 @@ public class Robot extends IterativeRobot {
     		if(gyro.getAngle()<=-360) {
     			gyro.reset();
     		}
+    		double[] centerX = table.getNumberArray("centerX", defaultValue);
+    		
+    		SmartDashboard.putNumber("centerX", centerX[0]);
     		SmartDashboard.putNumber("X-Axis", accel.getX());
     		SmartDashboard.putNumber("Y-Axis", accel.getY());
     		SmartDashboard.putNumber("Z-Axis", accel.getZ());
@@ -125,8 +115,21 @@ public class Robot extends IterativeRobot {
     		SmartDashboard.putNumber("Time", timer.get());
     	}
     }
-    public void testPeriodic() {
+
+	public void testPeriodic() {
     }
 }
 //cut my slice into pieces
 //this is my plastic fork
+
+
+
+
+
+
+
+
+
+
+
+
