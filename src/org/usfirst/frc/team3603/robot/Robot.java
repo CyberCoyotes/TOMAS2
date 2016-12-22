@@ -1,22 +1,35 @@
 /****************************************
  * 
- *	THOMAS 2
+ *	TOMAS 2
  *	@author CyberCoyotes
  *
  ****************************************/
 
 package org.usfirst.frc.team3603.robot;
 
+import com.ni.vision.NIVision;
+import com.ni.vision.NIVision.DrawMode;
+import com.ni.vision.NIVision.Image;
+import com.ni.vision.NIVision.ParticleFilterCriteria;
+import com.ni.vision.NIVision.ParticleFilterCriteria2;
+import com.ni.vision.NIVision.ShapeMode;
+
 import edu.wpi.first.wpilibj.ADXL362;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.image.BinaryImage;
+import edu.wpi.first.wpilibj.image.ColorImage;
+import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.AxisCamera;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 public class Robot extends IterativeRobot {
 	Joystick joy1 = new Joystick(2);
@@ -37,6 +50,8 @@ public class Robot extends IterativeRobot {
 	
 	ADXL362 accel = new ADXL362(Range.k8G);
 	Timer timer = new Timer();
+	USBCamera camera = new USBCamera();
+	ParticleFilterCriteria2[] cc;
 	
     public void robotInit() {
     	backRightMotor.setInverted(true);
@@ -47,11 +62,15 @@ public class Robot extends IterativeRobot {
     	timer.start();
     	
     	enc.setMaxPeriod(.1);
-    	enc.setMinRate(1);
-    	enc.setDistancePerPulse(0.25);
+    	enc.setMinRate(0.1);
+    	enc.setDistancePerPulse(0.25); //Change to 1/4 of the circumference of the wheel.
     	enc.setSamplesToAverage(7);
+    	
+    	cc = new ParticleFilterCriteria2[0];
+    	camera.setSize(200, 150);
+    	camera.setFPS(20);
+    	camera.startCapture();
     }
-    
 	public void autonomousInit() {
     }
 	
@@ -94,6 +113,10 @@ public class Robot extends IterativeRobot {
 	    		if(Math.abs(x)>=0.1 || Math.abs(y)>=0.1 || Math.abs(rot)>=0.1) {
 	    			mainDrive.mecanumDrive_Cartesian(x, y, rot, 0);
 	    		}
+	    		if(joy1.getRawButton(1)) {
+	    			centerCalculate();
+	    		}
+	    		
 	    	} else {
 	    		//Brake if the controllers don't read anything
 	    		backLeftMotor.set(0);
@@ -114,7 +137,6 @@ public class Robot extends IterativeRobot {
     		if(gyro.getAngle()<=-360) {
     			gyro.reset();
     		}
-    		
     		SmartDashboard.putNumber("X-Axis", accel.getX()*32.174049);
     		SmartDashboard.putNumber("Y-Axis", accel.getY()*32.174049);
     		SmartDashboard.putNumber("Z-Axis", accel.getZ()*32.174049); //Gs to feet/s^2
@@ -124,6 +146,28 @@ public class Robot extends IterativeRobot {
     		SmartDashboard.putNumber("Time", timer.get());
     	}
     }
+	private void centerCalculate() {
+		ColorImage image = null;
+		BinaryImage thresholdImage = null;
+		BinaryImage bigObjectImage = null;
+		BinaryImage convexHull = null;
+		BinaryImage filteredImage = null;
+		
+		try {
+			image = camera.getInstance();
+			thresholdImage = image.thresholdRGB(0, 100, 0, 100, 0, 100);
+			bigObjectImage = thresholdImage.removeSmallObjects(false, 1);
+			convexHull = bigObjectImage.convexHull(false);
+			filteredImage = convexHull.particleFilter(cc);
+			ParticleAnalysisReport[] reports = filteredImage.getOrderedParticleAnalysisReports();
+			for(int i = 0; i < reports.length + 1; i++) {
+				SmartDashboard.putNumber("Particle", reports[i].center_mass_x_normalized);
+			}
+			
+		} catch(Exception ex) {
+		} finally {
+		}
+	}
 
 	public void testPeriodic() {
     }
