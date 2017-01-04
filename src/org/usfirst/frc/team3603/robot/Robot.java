@@ -58,7 +58,7 @@ public class Robot extends IterativeRobot {
     	
     	enc.setMaxPeriod(.1);
     	enc.setMinRate(0.1);
-    	enc.setDistancePerPulse(0.25); //Change to 1/4 of the circumference of the wheel.
+    	enc.setDistancePerPulse(5.5/12*3.142/4);
     	enc.setSamplesToAverage(7);
     	
     	cc = new ParticleFilterCriteria2[0];
