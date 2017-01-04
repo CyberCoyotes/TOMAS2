@@ -7,13 +7,7 @@
 
 package org.usfirst.frc.team3603.robot;
 
-import com.ni.vision.NIVision;
-import com.ni.vision.NIVision.DrawMode;
-import com.ni.vision.NIVision.Image;
-import com.ni.vision.NIVision.ParticleFilterCriteria;
 import com.ni.vision.NIVision.ParticleFilterCriteria2;
-import com.ni.vision.NIVision.ShapeMode;
-
 import edu.wpi.first.wpilibj.ADXL362;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -28,7 +22,6 @@ import edu.wpi.first.wpilibj.image.ColorImage;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.AxisCamera;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
 public class Robot extends IterativeRobot {
@@ -50,6 +43,8 @@ public class Robot extends IterativeRobot {
 	
 	ADXL362 accel = new ADXL362(Range.k8G);
 	Timer timer = new Timer();
+	
+	CameraServer cam = CameraServer.getInstance();
 	USBCamera camera = new USBCamera();
 	ParticleFilterCriteria2[] cc;
 	
@@ -70,6 +65,8 @@ public class Robot extends IterativeRobot {
     	camera.setSize(200, 150);
     	camera.setFPS(20);
     	camera.startCapture();
+    	
+    	cam.startAutomaticCapture(camera);
     }
 	public void autonomousInit() {
     }
@@ -154,7 +151,7 @@ public class Robot extends IterativeRobot {
 		BinaryImage filteredImage = null;
 		
 		try {
-			image = camera.getInstance();
+			image = null /*replace with camera image*/;
 			thresholdImage = image.thresholdRGB(0, 100, 0, 100, 0, 100);
 			bigObjectImage = thresholdImage.removeSmallObjects(false, 1);
 			convexHull = bigObjectImage.convexHull(false);
