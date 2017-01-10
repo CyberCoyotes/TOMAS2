@@ -17,14 +17,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.image.BinaryImage;
-import edu.wpi.first.wpilibj.image.ColorImage;
-import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.USBCamera;
+import frc3603.RobotMap;
 
 public class Robot extends IterativeRobot {
+	Camera camera2 = new Camera();
+	
 	Joystick joy1 = new Joystick(2);
 	Joystick joy2 = new Joystick(3);
 
@@ -34,7 +34,6 @@ public class Robot extends IterativeRobot {
 	Victor backRightMotor = new Victor(2);
 	Victor frontLeftMotor = new Victor(3);
 	Victor frontRightMotor = new Victor(4);
-	//
 	RobotDrive mainDrive = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor); 
 	                             //(frontLeft, rearLeft, frontRight rearRight);
 	
@@ -54,12 +53,11 @@ public class Robot extends IterativeRobot {
     	gyro.calibrate();
     	gyro.reset();
     	enc.reset();
-    	timer.start();
     	
-    	enc.setMaxPeriod(.1);
-    	enc.setMinRate(0.1);
-    	enc.setDistancePerPulse(5.5/12*3.142/4);
-    	enc.setSamplesToAverage(7);
+    	enc.setMaxPeriod(.1);//Find ideal number
+    	enc.setMinRate(0.1); //Find ideal rate
+    	enc.setDistancePerPulse(5.5/12*Math.PI/4);
+    	enc.setSamplesToAverage(7); //Find ideal number
     	
     	cc = new ParticleFilterCriteria2[0];
     	camera.setSize(200, 150);
@@ -87,12 +85,11 @@ public class Robot extends IterativeRobot {
     			mainDrive.mecanumDrive_Cartesian(-0.75, 0, 0, gyro.getAngle());//Drive left for 3 seconds or three feet
     		}
     		if(timer.get() <= 15 && gyro.getAngle() < 90) {
-    			mainDrive.mecanumDrive_Cartesian(0.75, 0, 0.75, gyro.getAngle());//Make an arc for 3 seconds or 90 degrees
+    			mainDrive.mecanumDrive_Cartesian(0.75, 0, 0.75, 0);//Make an arc for 3 seconds or 90 degrees
     		}
     		if(timer.get() <= 20) {
     			mainDrive.mecanumDrive_Cartesian(0, 0, -1, gyro.getAngle());//Spin left really fast for 5 seconds
     		}
-    		//
     	}
     }
 
@@ -112,7 +109,8 @@ public class Robot extends IterativeRobot {
 	    			mainDrive.mecanumDrive_Cartesian(x, y, rot, 0);
 	    		}
 	    		if(joy1.getRawButton(1)) {
-	    			centerCalculate();
+	    			double angle = camera2.getAngle(RobotMap.kTop);
+	    			SmartDashboard.putNumber("View Angle", angle);
 	    		}
 	    		
 	    	} else {
@@ -144,28 +142,6 @@ public class Robot extends IterativeRobot {
     		SmartDashboard.putNumber("Time", timer.get());
     	}
     }
-	private void centerCalculate() {
-		ColorImage image = null;
-		BinaryImage thresholdImage = null;
-		BinaryImage bigObjectImage = null;
-		BinaryImage convexHull = null;
-		BinaryImage filteredImage = null;
-		
-		try {
-			image = null /*replace with camera image*/;
-			thresholdImage = image.thresholdRGB(0, 100, 0, 100, 0, 100);
-			bigObjectImage = thresholdImage.removeSmallObjects(false, 1);
-			convexHull = bigObjectImage.convexHull(false);
-			filteredImage = convexHull.particleFilter(cc);
-			ParticleAnalysisReport[] reports = filteredImage.getOrderedParticleAnalysisReports();
-			for(int i = 0; i < reports.length + 1; i++) {
-				SmartDashboard.putNumber("Particle", reports[i].center_mass_x_normalized);
-			}
-			
-		} catch(Exception ex) {
-		} finally {
-		}
-	}
 
 	public void testPeriodic() {
     }
