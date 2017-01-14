@@ -7,7 +7,6 @@
 
 package org.usfirst.frc.team3603.robot;
 
-import com.ni.vision.NIVision.ParticleFilterCriteria2;
 import edu.wpi.first.wpilibj.ADXL362;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -19,11 +18,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.USBCamera;
-import frc3603.RobotMap;
 
 public class Robot extends IterativeRobot {
-	Camera camera2 = new Camera();
 	
 	Joystick joy1 = new Joystick(2);
 	Joystick joy2 = new Joystick(3);
@@ -44,8 +40,6 @@ public class Robot extends IterativeRobot {
 	Timer timer = new Timer();
 	
 	CameraServer cam = CameraServer.getInstance();
-	USBCamera camera = new USBCamera();
-	ParticleFilterCriteria2[] cc;
 	
     public void robotInit() {
     	backRightMotor.setInverted(true);
@@ -58,13 +52,6 @@ public class Robot extends IterativeRobot {
     	enc.setMinRate(0.1); //Find ideal rate
     	enc.setDistancePerPulse(5.5/12*Math.PI/4);
     	enc.setSamplesToAverage(7); //Find ideal number
-    	
-    	cc = new ParticleFilterCriteria2[0];
-    	camera.setSize(200, 150);
-    	camera.setFPS(20);
-    	camera.startCapture();
-    	
-    	cam.startAutomaticCapture(camera);
     }
 	public void autonomousInit() {
     }
@@ -107,10 +94,6 @@ public class Robot extends IterativeRobot {
 	    		
 	    		if(Math.abs(x)>=0.1 || Math.abs(y)>=0.1 || Math.abs(rot)>=0.1) {
 	    			mainDrive.mecanumDrive_Cartesian(x, y, rot, 0);
-	    		}
-	    		if(joy1.getRawButton(1)) {
-	    			double angle = camera2.getAngle(RobotMap.kTop);
-	    			SmartDashboard.putNumber("View Angle", angle);
 	    		}
 	    		
 	    	} else {
