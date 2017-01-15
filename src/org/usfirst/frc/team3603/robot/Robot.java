@@ -6,16 +6,7 @@
  ****************************************/
 
 package org.usfirst.frc.team3603.robot;
-
-import edu.wpi.first.wpilibj.ADXL362;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -40,6 +31,8 @@ public class Robot extends IterativeRobot {
 	Timer timer = new Timer();
 	
 	CameraServer cam = CameraServer.getInstance();
+	
+	AnalogOutput pullGear = new AnalogOutput(0);
 	
     public void robotInit() {
     	backRightMotor.setInverted(true);
@@ -87,7 +80,6 @@ public class Robot extends IterativeRobot {
 	    		/**********************
 	    		*** DRIVER CONTROLS ***
 	    		**********************/
-	    		
 	    		double x = Math.pow(joy1.getRawAxis(0), 3);
 	    		double y = Math.pow(joy1.getRawAxis(1), 3);
 	    		double rot = Math.pow(joy2.getRawAxis(0), 3);
